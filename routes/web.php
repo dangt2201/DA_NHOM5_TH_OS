@@ -7,7 +7,7 @@ use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\Product\CartController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
-
+use App\Http\Controllers\Admin\BrandController as AdminBrandController;
 
 // ============= HOME PAGE =============
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -42,6 +42,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::post('/update/{id}', [CartController::class, 'update'])->name('update');
     Route::post('/remove/{id}', [CartController::class, 'remove'])->name('remove');
     Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+     Route::post('/count', [CartController::class, 'count'])->name('count');  
 });
 
 

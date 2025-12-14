@@ -75,4 +75,22 @@
         <a href="{{ route('shop.index') }}">Tiếp tục mua sắm</a>
     @endif
 </div>
+<script>
+// Sau khi update/remove/clear, cập nhật badge
+document.addEventListener('DOMContentLoaded', function() {
+    // Tìm tất cả form (update, remove, clear)
+    const forms = document.querySelectorAll('form');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function() {
+            // Update badge sau submit
+            setTimeout(() => {
+                if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+            }, 500);
+        });
+    });
+});
+</script>
 @endsection

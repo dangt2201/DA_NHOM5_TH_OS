@@ -212,7 +212,29 @@ class CartController extends Controller
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
+    /**
+     * Lấy số lượng items trong giỏ (AJAX)
+     */
+    public function count()
+    {
+        try {
+            // Lấy giỏ hàng
+            $userId = Auth::check() ? Auth::id() : null;
+            $cart = Cart::where('user_id', $userId)->first();
 
+            if (!$cart) {
+                return response()->json(['count' => 0]);
+            }
+
+            // Tính tổng quantity
+            $count = $cart->items()->sum('quantity');
+
+            return response()->json(['count' => $count]);
+
+        } catch (\Exception $e) {
+            return response()->json(['count' => 0, 'error' => $e->getMessage()]);
+        }
+    }
     /**
      * Helper: Lấy hoặc tạo giỏ hàng
      */
