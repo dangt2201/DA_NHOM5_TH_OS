@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Brand;
 
 class HomeController extends Controller
 {
@@ -18,6 +20,12 @@ class HomeController extends Controller
                               ->limit(8)
                               ->get();
 
-        return view('user.home', compact('hotProducts'));
+        // Lấy tất cả categories active
+        $categories = Category::where('is_active', true)->get();
+
+        // Lấy tất cả brands active
+        $brands = Brand::where('is_active', true)->get();
+
+        return view('user.home', compact('hotProducts', 'categories', 'brands'));
     }
 }
