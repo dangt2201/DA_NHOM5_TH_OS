@@ -39,7 +39,7 @@
             @endforeach
         </table>
 
-        {{-- <a href="{{ route('shop.hotSale') }}">Xem tất cả sale →</a> --}}
+        <a href="{{ route('shop.hotSale') }}">Xem tất cả sale →</a>
     @else
         <p>Hiện chưa có sản phẩm sale</p>
     @endif
