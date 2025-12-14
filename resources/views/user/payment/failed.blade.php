@@ -3,12 +3,12 @@
 @section('body')
 <div style="padding: 20px; text-align: center;">
     <div style="max-width: 800px; margin: 0 auto;">
-        <h1 style="color: green; font-size: 36px;">✅ Đặt hàng thành công!</h1>
+        <h1 style="color: red; font-size: 36px;">❌ Thanh toán thất bại</h1>
 
-        <p style="font-size: 18px; margin: 20px 0; color: #666;">Cảm ơn bạn đã đặt hàng</p>
+        <p style="font-size: 18px; margin: 20px 0; color: #666;">Rất tiếc, giao dịch của bạn không thành công</p>
 
         <!-- Order Info -->
-        <div style="background: #e8f5e9; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid green;">
+        <div style="background: #ffebee; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid red;">
             <h3>Thông tin đơn hàng</h3>
             <table style="width: 100%; margin: 10px 0;">
                 <tr>
@@ -20,30 +20,39 @@
                     <td style="text-align: right; font-size: 18px; color: red; font-weight: bold;">{{ number_format($order->total_price) }}đ</td>
                 </tr>
                 <tr>
-                    <td style="text-align: left;"><strong>Trạng thái đơn:</strong></td>
+                    <td style="text-align: left;"><strong>Trạng thái thanh toán:</strong></td>
                     <td style="text-align: right;">
-                        <span style="background: orange; color: white; padding: 5px 15px; border-radius: 20px;">
-                            Chờ xử lý
+                        <span style="background: red; color: white; padding: 5px 15px; border-radius: 20px;">
+                            Thất bại
                         </span>
                     </td>
                 </tr>
                 <tr>
-                    <td style="text-align: left;"><strong>Ngày đặt:</strong></td>
+                    <td style="text-align: left;"><strong>Thời gian:</strong></td>
                     <td style="text-align: right;">{{ $order->created_at->format('d/m/Y H:i') }}</td>
                 </tr>
             </table>
         </div>
 
+        <!-- Possible Reasons -->
+        <div style="background: #fff3cd; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid #ff9800;">
+            <h3 style="color: #ff6f00;">⚠️ Có thể do:</h3>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Số dư tài khoản không đủ</li>
+                <li>Thông tin xác thực không chính xác</li>
+                <li>Bạn đã hủy giao dịch</li>
+                <li>Lỗi kết nối mạng</li>
+                <li>Thời gian hết hạn</li>
+            </ul>
+        </div>
+
         <!-- Delivery Info -->
-        <div style="background: #e3f2fd; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid #2196f3;">
+        <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px;">
             <h3>Thông tin giao hàng</h3>
             <p><strong>{{ $order->user_name }}</strong></p>
             <p>📞 {{ $order->user_phone }}</p>
             <p>📧 {{ $order->user_email }}</p>
             <p>📍 {{ $order->user_address }}</p>
-            @if($order->user_note)
-                <p><strong>Ghi chú:</strong> {{ $order->user_note }}</p>
-            @endif
         </div>
 
         <!-- Order Items -->
@@ -69,18 +78,23 @@
             @endforeach
         </table>
 
-        <!-- Message -->
-        <div style="background: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 5px; color: #856404;">
-            <strong>ℹ️ Lưu ý:</strong> Chúng tôi sẽ liên hệ với bạn để xác nhận đơn hàng trong vòng 24 giờ.
+        <!-- Support -->
+        <div style="background: #e3f2fd; padding: 20px; margin: 20px 0; border-radius: 8px;">
+            <h3>Cần hỗ trợ?</h3>
+            <p>📞 Hotline: <strong>1900.633.349</strong></p>
+            <p>💬 Chat với chúng tôi để được hỗ trợ</p>
         </div>
 
         <!-- Buttons -->
-        <div style="margin: 30px 0; display: flex; gap: 10px; justify-content: center;">
+        <div style="margin: 30px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ route('payment.checkout') }}" style="padding: 12px 20px; background: #f44336; color: white; text-decoration: none; border-radius: 5px;">
+                🔄 Thử lại thanh toán
+            </a>
             <a href="{{ route('user.orders') }}" style="padding: 12px 20px; background: #2196f3; color: white; text-decoration: none; border-radius: 5px;">
-                📦 Xem đơn hàng của tôi
+                📦 Xem đơn hàng
             </a>
             <a href="{{ route('shop.index') }}" style="padding: 12px 20px; background: #000; color: white; text-decoration: none; border-radius: 5px;">
-                ← Tiếp tục mua sắm
+                ← Trang chủ
             </a>
         </div>
     </div>
