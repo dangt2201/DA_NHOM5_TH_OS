@@ -58,6 +58,8 @@ Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'
         });
 // ========== CATEGORIES ==========
         Route::resource('categories', CategoryController::class);
+// ========== BRANDS ==========
+        Route::resource('brands', AdminBrandController::class);
 
 
 
