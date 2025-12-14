@@ -100,7 +100,7 @@
                 @endguest
                 
                 <!-- Cart -->
-                {{-- <a href="{{ route('cart.index') }}" class="position-relative"> --}}
+                <a href="{{ route('cart.index') }}" class="position-relative">
                     <i class="bi bi-cart3 fs-4"></i>
                     @php
                         $cartCount = Auth::check() ? Auth::user()->cartItems->sum('quantity') : 0;

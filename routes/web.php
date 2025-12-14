@@ -6,6 +6,8 @@ use App\Http\Controllers\User\BrandController as UserBrandController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\Product\CartController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CategoryController;
+
 
 // ============= HOME PAGE =============
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -35,7 +37,9 @@ Route::get('/hot-sale', [UserProductController::class, 'hotSale'])->name('shop.h
 |--------------------------------------------------------------------------
 */
 Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/add', [CartController::class, 'add'])->name('add');
+    Route::post('/update/{id}', [CartController::class, 'update'])->name('update');
 });
 
 
