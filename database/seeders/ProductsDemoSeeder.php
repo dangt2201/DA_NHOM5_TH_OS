@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Product;
@@ -11,16 +10,31 @@ use Illuminate\Database\Seeder;
 
 class ProductsDemoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    // DANH SÁCH 11 ẢNH CỦA BẠN
+    private $availableImages = [
+        'img_1.jpg',
+        'img_2.jpg', 
+        'img_3.jpg',
+        'img_4.jpg',
+        'img_5.jpg',
+        'img_6.jpg',
+        'img_7.jpg',
+        'img_8.jpg',
+        'img_9.jpg',
+        'img_10.jpg',
+        'img_11.jpg',
+    ];
+    
     public function run(): void
     {
+        $this->command->info('🚀 Bắt đầu tạo 50 sản phẩm...');
+        
+        // Lấy danh mục
         $cat_nam = Category::where('slug', 'giay-nam')->firstOrFail();
         $cat_nu  = Category::where('slug', 'giay-nu')->firstOrFail();
         $cat_pk  = Category::where('slug', 'phu-kien')->firstOrFail();
-
-
+        
+        // Lấy thương hiệu
         $brands = [
             'nike'     => Brand::firstOrCreate(['slug' => 'nike'], ['name' => 'Nike', 'is_active' => true]),
             'adidas'   => Brand::firstOrCreate(['slug' => 'adidas'], ['name' => 'Adidas', 'is_active' => true]),
@@ -31,7 +45,8 @@ class ProductsDemoSeeder extends Seeder
             'crep-protect' => Brand::firstOrCreate(['slug' => 'crep-protect'], ['name' => 'Crep Protect', 'is_active' => true]),
             'reebok'   => Brand::firstOrCreate(['slug' => 'reebok'], ['name' => 'Reebok', 'is_active' => true]),
         ];
-
+        
+        // 50 SẢN PHẨM
         $products = [
             // 1-10
             ['Nike Air Force 1 Low White', 'nike-af1-white', 3500000, 2890000, $cat_nam, $brands['nike']],
@@ -93,11 +108,22 @@ class ProductsDemoSeeder extends Seeder
             ['Reebok Club C', 'club-c', 2300000, 1890000, $cat_nam, $brands['reebok']],
             ['Túi đựng giày Sneaker', 'tui-dung-giay', 250000, 199000, $cat_pk, $brands['crep-protect']],
         ];
-
-           $createdCount = 0;
+        
+        $createdCount = 0;
+        $variantCount = 0;
+        
+        $this->command->info("📸 Sử dụng 11 ảnh có sẵn");
+        
         // Tạo sản phẩm
         foreach ($products as $i => $p) {
             [$name, $slug, $price, $sale, $cat, $brand] = $p;
+            
+            // Chọn ảnh
+            $imageIndex = $i % count($this->availableImages);
+            $imageFile = $this->availableImages[$imageIndex];
+            
+            // Chỉ lưu tên file
+            $thumbnail = $imageFile;
             
             // MÔ TẢ ĐƠN GIẢN - CHỈ 1 DÒNG
             $description = $name . ' - Chính hãng 100%. Bảo hành 6 tháng. Đổi trả trong 7 ngày.';
@@ -109,7 +135,7 @@ class ProductsDemoSeeder extends Seeder
                     'brand_id'      => $brand->id,
                     'name'          => $name,
                     'sku'           => 'SP' . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
-                    'img_thumbnail' => null,
+                    'img_thumbnail' => $thumbnail,
                     'price'         => $price,
                     'price_sale'    => $sale,
                     'description'   => $description,  // Mô tả đơn giản
@@ -119,7 +145,52 @@ class ProductsDemoSeeder extends Seeder
             
             $createdCount++;
             
+            // Tạo variants
+            $this->createVariants($product);
+            $variantCount += $product->variants()->count();
+            
+            // Progress
+            if (($i + 1) % 10 === 0) {
+                $this->command->info("   ✅ Đã tạo {$createdCount}/50 sản phẩm...");
+            }
         }
-     
+        
+        $this->command->newLine();
+        $this->command->info("🎉 HOÀN TẤT!");
+        $this->command->info("   • Sản phẩm: {$createdCount}/50");
+        $this->command->info("   • Biến thể: {$variantCount}");
+    }
+    
+    /**
+     * Tạo variants cho sản phẩm
+     */
+    private function createVariants(Product $product): void
+    {
+        $sizes = ['36', '37', '38', '39', '40', '41', '42', '43'];
+        $colors = ['Trắng', 'Đen', 'Xám', 'Đỏ', 'Xanh Navy', 'Xanh Dương', 'Hồng', 'Nâu'];
+        
+        $numVariants = rand(3, 8);
+        $createdCombinations = [];
+        
+        for ($i = 0; $i < $numVariants; $i++) {
+            $size = $sizes[array_rand($sizes)];
+            $color = $colors[array_rand($colors)];
+            
+            $combination = $size . '-' . $color;
+            if (in_array($combination, $createdCombinations)) {
+                continue;
+            }
+            
+            $createdCombinations[] = $combination;
+            
+            ProductVariant::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'size' => $size,
+                    'color' => $color
+                ],
+                ['quantity' => rand(10, 150)]
+            );
+        }
     }
 }

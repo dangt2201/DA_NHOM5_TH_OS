@@ -45,7 +45,7 @@
             <p class="text-muted mb-4">{{ $product->description }}</p>
 
             {{-- Form thêm vào giỏ --}}
-            <form action="{{-- route('cart.add') --}}" method="POST">
+            <form action="{{ route('cart.add') }}" method="POST">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 
