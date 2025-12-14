@@ -17,6 +17,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/san-pham', [UserProductController::class, 'index'])->name('shop.index');
 Route::get('/san-pham/{slug}.html', [UserProductController::class, 'detail'])->name('shop.detail');
 Route::get('/danh-muc/{slug}', [UserProductController::class, 'getByCategory'])->name('shop.category');
+Route::get('/hot-sale', [UserProductController::class, 'hotSale'])->name('shop.hotSale');
 /*
 |--------------------------------------------------------------------------
 | BRANDS (Public)
@@ -24,12 +25,21 @@ Route::get('/danh-muc/{slug}', [UserProductController::class, 'getByCategory'])-
 */
 Route::get('/thuong-hieu', [UserBrandController::class, 'index'])->name('brands.index');
 Route::get('/thuong-hieu/{slug}', [UserBrandController::class, 'show'])->name('brands.show');
+
+
+
 /*
 |--------------------------------------------------------------------------
-| PRODUCTS (Public)
+| ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
-Route::get('/san-pham', [UserProductController::class, 'index'])->name('shop.index');
-Route::get('/san-pham/{slug}.html', [UserProductController::class, 'detail'])->name('shop.detail');
-Route::get('/danh-muc/{slug}', [UserProductController::class, 'getByCategory'])->name('shop.category');
-Route::get('/hot-sale', [UserProductController::class, 'hotSale'])->name('shop.hotSale');
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// ========== ORDERS ==========
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [DashboardController::class, 'orders'])->name('index');
+            Route::get('/{orderId}', [DashboardController::class, 'orderDetail'])->name('detail');
+            Route::post('/{orderId}/update-status', [DashboardController::class, 'updateOrderStatus'])
+                ->name('update_status');
+        });
+
+
