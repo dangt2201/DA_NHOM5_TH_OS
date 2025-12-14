@@ -37,7 +37,13 @@
                     </td>
                     <td style="font-weight: bold; color: red;">{{ number_format($itemTotal) }}đ</td>
                     <td>
-                        <a href="#" onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</a>
+                        <form action="{{ route('cart.remove', $item->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" style="color: red; background: none; border: none; cursor: pointer;" 
+                                    onclick="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?')">
+                                Xóa
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
@@ -49,6 +55,15 @@
             <span style="color: red; font-weight: bold;">{{ number_format($totalPrice) }}đ</span>
         </div>
 
+        <div style="margin: 20px 0;">
+            <form action="{{ route('cart.clear') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" style="padding: 10px 20px; background: #f44; color: white; border: none; cursor: pointer; border-radius: 5px;"
+                        onclick="return confirm('Bạn chắc chắn muốn xóa toàn bộ giỏ hàng?')">
+                        Xóa toàn bộ
+                </button>
+            </form>
+        </div>
         <!-- Buttons -->
         <div style="margin: 20px 0;">
             <a href="{{ route('shop.index') }}" style="padding: 10px 20px; background: #ccc; text-decoration: none; color: black; border-radius: 5px;">← Tiếp tục mua</a>
