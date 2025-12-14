@@ -41,5 +41,7 @@ Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'
             Route::post('/{orderId}/update-status', [DashboardController::class, 'updateOrderStatus'])
                 ->name('update_status');
         });
+// ========== CATEGORIES ==========
+        Route::resource('categories', CategoryController::class);
 
 
