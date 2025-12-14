@@ -98,72 +98,120 @@ class CartController extends Controller
         }
     }
 
-    /**
- * Hiển thị giỏ hàng
- */
-public function index()
-{
-    // Lấy giỏ hàng (dùng user_id = null nếu chưa login)
-    $userId = Auth::check() ? Auth::id() : null;
-    $cart = Cart::where('user_id', $userId)->first();
-
-    if (!$cart) {
-        return view('user.cart.index', ['cartItems' => [], 'totalPrice' => 0]);
-    }
-
-    // Lấy cart items với eager loading
-    $cartItems = $cart->items()
-        ->with(['variant.product'])
-        ->get();
-
-    // Tính tổng tiền
-    $totalPrice = 0;
-    foreach ($cartItems as $item) {
-        $product = $item->variant->product;
-        $price = $product->price_sale ?? $product->price;
-        $totalPrice += $price * $item->quantity;
-    }
-
-    return view('user.cart.index', compact('cartItems', 'totalPrice'));
-}
-
-/**
- * Cập nhật số lượng
- */
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'quantity' => 'required|integer|min:1'
-    ], [
-        'quantity.required' => 'Vui lòng nhập số lượng',
-        'quantity.min' => 'Số lượng phải >= 1',
-    ]);
-
-    try {
-        // Lấy giỏ hàng
+        /**
+     * Hiển thị giỏ hàng
+     */
+    public function index()
+    {
+        // Lấy giỏ hàng (dùng user_id = null nếu chưa login)
         $userId = Auth::check() ? Auth::id() : null;
-        $cart = Cart::where('user_id', $userId)->firstOrFail();
+        $cart = Cart::where('user_id', $userId)->first();
 
-        // Lấy cart item
-        $cartItem = CartItem::where('cart_id', $cart->id)
-            ->where('id', $id)
-            ->with('variant.product')
-            ->firstOrFail();
-
-        // Kiểm tra stock
-        if ($cartItem->variant->quantity < $request->quantity) {
-            return back()->with('error', 'Không đủ hàng! Chỉ còn ' . $cartItem->variant->quantity . ' cái');
+        if (!$cart) {
+            return view('user.cart.index', ['cartItems' => [], 'totalPrice' => 0]);
         }
 
-        // Cập nhật
-        $cartItem->update(['quantity' => $request->quantity]);
+        // Lấy cart items với eager loading
+        $cartItems = $cart->items()
+            ->with(['variant.product'])
+            ->get();
 
-        return back()->with('success', 'Cập nhật số lượng thành công!');
+        // Tính tổng tiền
+        $totalPrice = 0;
+        foreach ($cartItems as $item) {
+            $product = $item->variant->product;
+            $price = $product->price_sale ?? $product->price;
+            $totalPrice += $price * $item->quantity;
+        }
 
-    } catch (\Exception $e) {
-        return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        return view('user.cart.index', compact('cartItems', 'totalPrice'));
     }
-}
+
+    /**
+     * Cập nhật số lượng
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ], [
+            'quantity.required' => 'Vui lòng nhập số lượng',
+            'quantity.min' => 'Số lượng phải >= 1',
+        ]);
+
+        try {
+            // Lấy giỏ hàng
+            $userId = Auth::check() ? Auth::id() : null;
+            $cart = Cart::where('user_id', $userId)->firstOrFail();
+
+            // Lấy cart item
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('id', $id)
+                ->with('variant.product')
+                ->firstOrFail();
+
+            // Kiểm tra stock
+            if ($cartItem->variant->quantity < $request->quantity) {
+                return back()->with('error', 'Không đủ hàng! Chỉ còn ' . $cartItem->variant->quantity . ' cái');
+            }
+
+            // Cập nhật
+            $cartItem->update(['quantity' => $request->quantity]);
+
+            return back()->with('success', 'Cập nhật số lượng thành công!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+    /**
+     * Xóa một sản phẩm khỏi giỏ hàng
+     */
+    public function remove($id)
+    {
+        try {
+            // Lấy giỏ hàng
+            $userId = Auth::check() ? Auth::id() : null;
+            $cart = Cart::where('user_id', $userId)->firstOrFail();
+
+            // Lấy cart item
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('id', $id)
+                ->firstOrFail();
+
+            // Xóa
+            $cartItem->delete();
+
+            return back()->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Xóa toàn bộ giỏ hàng
+     */
+    public function clear()
+    {
+        try {
+            // Lấy giỏ hàng
+            $userId = Auth::check() ? Auth::id() : null;
+            $cart = Cart::where('user_id', $userId)->first();
+
+            if (!$cart) {
+                return back()->with('warning', 'Giỏ hàng đã trống!');
+            }
+
+            // Xóa tất cả items
+            $cart->items()->delete();
+
+            return back()->with('success', 'Đã xóa toàn bộ giỏ hàng!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
 
     /**
      * Helper: Lấy hoặc tạo giỏ hàng
