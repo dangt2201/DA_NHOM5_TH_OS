@@ -63,6 +63,14 @@ Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'
         Route::resource('categories', CategoryController::class);
 // ========== BRANDS ==========
         Route::resource('brands', AdminBrandController::class);
+   // ========== PRODUCTS ==========
+        Route::resource('products', AdminProductController::class);
+// ========== PRODUCT VARIANTS ==========
+        Route::post('products/{product}/variants', [ProductVariantController::class, 'store'])
+            ->name('product_variants.store');
+        
+        Route::delete('variants/{variant}', [ProductVariantController::class, 'destroy'])
+            ->name('product_variants.destroy');
 
 
 
