@@ -8,6 +8,7 @@ use App\Http\Controllers\User\Product\CartController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController as AdminBrandController;
+use App\Http\Controllers\User\Payment\MoMoController;
 
 // ============= HOME PAGE =============
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -44,7 +45,15 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::post('/clear', [CartController::class, 'clear'])->name('clear');
      Route::post('/count', [CartController::class, 'count'])->name('count');  
 });
-
+/*
+|--------------------------------------------------------------------------
+| PAYMENT (Tạm thời bỏ middleware để test)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('payment')->name('payment.')->group(function () {
+    Route::get('/checkout', [MoMoController::class, 'showCheckout'])->name('checkout');
+    
+});
 
 /*
 |--------------------------------------------------------------------------
