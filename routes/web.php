@@ -24,3 +24,12 @@ Route::get('/danh-muc/{slug}', [UserProductController::class, 'getByCategory'])-
 */
 Route::get('/thuong-hieu', [UserBrandController::class, 'index'])->name('brands.index');
 Route::get('/thuong-hieu/{slug}', [UserBrandController::class, 'show'])->name('brands.show');
+/*
+|--------------------------------------------------------------------------
+| PRODUCTS (Public)
+|--------------------------------------------------------------------------
+*/
+Route::get('/san-pham', [UserProductController::class, 'index'])->name('shop.index');
+Route::get('/san-pham/{slug}.html', [UserProductController::class, 'detail'])->name('shop.detail');
+Route::get('/danh-muc/{slug}', [UserProductController::class, 'getByCategory'])->name('shop.category');
+Route::get('/hot-sale', [UserProductController::class, 'hotSale'])->name('shop.hotSale');
