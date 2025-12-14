@@ -157,4 +157,19 @@ class MoMoController extends Controller
             return back()->withInput()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
+    /**
+     * Trang thanh toán thất bại
+     */
+    public function failed($orderId)
+    {
+        // Lấy order
+        $order = Order::with('orderItems')->findOrFail($orderId);
+
+        // Verify ownership (nếu login)
+        if (Auth::check() && $order->user_id !== Auth::id()) {
+            abort(403, 'Bạn không có quyền truy cập đơn hàng này');
+        }
+
+        return view('user.payment.failed', compact('order'));
+    }
 }

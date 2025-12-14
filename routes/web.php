@@ -53,6 +53,8 @@ Route::prefix('cart')->name('cart.')->group(function () {
 Route::prefix('payment')->name('payment.')->group(function () {
     Route::get('/checkout', [MoMoController::class, 'showCheckout'])->name('checkout');
     Route::post('/process', [MoMoController::class, 'processPayment'])->name('process');
+    Route::get('/success/{orderId}', [MoMoController::class, 'success'])->name('success');
+    Route::get('/failed/{orderId}', [MoMoController::class, 'failed'])->name('failed');
 });
 
 /*
