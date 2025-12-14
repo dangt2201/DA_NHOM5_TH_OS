@@ -1,5 +1,36 @@
 @extends('user.layouts.app')
-
+<script>
+document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const size = document.querySelector('input[name="size"]:checked');
+    const color = document.querySelector('input[name="color"]:checked');
+    const quantity = document.querySelector('input[name="quantity"]');
+    
+    if (!size) {
+        alert('Vui lòng chọn size');
+        return;
+    }
+    if (!color) {
+        alert('Vui lòng chọn màu');
+        return;
+    }
+    
+    document.getElementById('size_input').value = size.value;
+    document.getElementById('color_input').value = color.value;
+    document.getElementById('quantity_input').value = quantity.value || 1;
+    
+    // Submit form rồi update cart count
+    this.submit();
+    
+    // Update badge sau 500ms (sau khi add xong)
+    setTimeout(() => {
+        if (typeof updateCartCount === 'function') {
+            updateCartCount();
+        }
+    }, 500);
+});
+</script>
 @section('body')
 <div class="container py-5">
 
