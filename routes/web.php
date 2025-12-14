@@ -52,7 +52,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 */
 Route::prefix('payment')->name('payment.')->group(function () {
     Route::get('/checkout', [MoMoController::class, 'showCheckout'])->name('checkout');
-    
+    Route::post('/process', [MoMoController::class, 'processPayment'])->name('process');
 });
 
 /*

@@ -10,7 +10,7 @@
         <div style="border: 1px solid #ccc; padding: 20px;">
             <h2>Thông tin người nhận</h2>
 
-            <form action="{{-- route('payment.process') --}}" method="POST">
+            <form action="{{ route('payment.process') }}" method="POST">
                 @csrf
 
                 <div style="margin-bottom: 15px;">
