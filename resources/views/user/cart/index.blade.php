@@ -67,7 +67,7 @@
         <!-- Buttons -->
         <div style="margin: 20px 0;">
             <a href="{{ route('shop.index') }}" style="padding: 10px 20px; background: #ccc; text-decoration: none; color: black; border-radius: 5px;">← Tiếp tục mua</a>
-            <a href="{{-- route('payment.checkout') --}}" style="padding: 10px 20px; background: #000; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">Thanh toán →</a>
+            <a href="{{ route('payment.checkout') }}" style="padding: 10px 20px; background: #000; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">Thanh toán →</a>
         </div>
 
     @else
