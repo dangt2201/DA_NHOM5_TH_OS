@@ -14,7 +14,7 @@
             <!-- Navigation Links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-danger" href="{{ route('shop.hotSale') }}">
+                    {{-- <a class="nav-link text-danger" href="{{ route('shop.hotSale') }}"> --}}
                         <i class="bi bi-fire"></i> HOT SALE
                     </a>
                 </li>
@@ -31,7 +31,7 @@
                     <a class="nav-link" href="{{ route('shop.category', 'phu-kien') }}">Phụ kiện</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('return.policy') }}">Chính sách</a>
+                    {{-- <a class="nav-link" href="{{ route('return.policy') }}">Chính sách</a> --}}
                 </li>
             </ul>
             
@@ -53,7 +53,7 @@
                 
                 <!-- User Dropdown -->
                 @guest
-                    <a href="{{ route('login') }}" class="btn btn-outline-dark rounded-pill px-3">
+                    {{-- <a href="{{ route('login') }}" class="btn btn-outline-dark rounded-pill px-3"> --}}
                         <i class="bi bi-person"></i> Đăng nhập
                     </a>
                 @else
@@ -100,7 +100,7 @@
                 @endguest
                 
                 <!-- Cart -->
-                <a href="{{ route('cart.index') }}" class="position-relative">
+                {{-- <a href="{{ route('cart.index') }}" class="position-relative"> --}}
                     <i class="bi bi-cart3 fs-4"></i>
                     @php
                         $cartCount = Auth::check() ? Auth::user()->cartItems->sum('quantity') : 0;
