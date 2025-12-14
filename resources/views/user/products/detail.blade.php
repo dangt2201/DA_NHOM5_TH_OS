@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('user.layouts.app')
 
 @section('body')
 <div class="container py-5">
@@ -45,7 +45,7 @@
             <p class="text-muted mb-4">{{ $product->description }}</p>
 
             {{-- Form thêm vào giỏ --}}
-            <form action="{{ route('cart.add') }}" method="POST">
+            <form action="{{-- route('cart.add') --}}" method="POST">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 
@@ -84,7 +84,7 @@
         <div class="row">
             @foreach($relatedProducts as $related)
                 <div class="col-6 col-md-3">
-                    @include('partials.product_card', ['product' => $related])
+                    {{-- @include('partials.product_card', ['product' => $related]) --}}
                 </div>
             @endforeach
         </div>
