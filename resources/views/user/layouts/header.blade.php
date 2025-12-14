@@ -1,34 +1,115 @@
-<nav style="background: #f0f0f0; padding: 15px; border-bottom: 1px solid #ccc;">
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <!-- Branding + Navigation -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+    <div class="container-fluid px-4">
+        <!-- Brand -->
+        <a class="navbar-brand" href="{{ route('home') }}">
+            SOLID <span class="brand-highlight">TECH</span>
+        </a>
+        
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <!-- Navigation Links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="{{ route('shop.hotSale') }}">
+                        <i class="bi bi-fire"></i> HOT SALE
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('brands.index') }}">Thương hiệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('shop.category', 'giay-nam') }}">Giày Nam</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('shop.category', 'giay-nu') }}">Giày Nữ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('shop.category', 'phu-kien') }}">Phụ kiện</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('return.policy') }}">Chính sách</a>
+                </li>
+            </ul>
             
-            <!-- Logo/Brand -->
-            <h2 style="margin: 0;">
-                <a href="/" style="text-decoration: none; color: black;">SOLID TECH</a>
-            </h2>
-
-            <!-- Links -->
-            <div style="display: flex; gap: 20px; align-items: center;">
-                <a href="/" style="text-decoration: none; color: black;">Trang chủ</a>
-                <a href="{{ route('shop.index') }}" style="text-decoration: none; color: black;">Sản phẩm</a>
-                <a href="{{ route('brands.index') }}" style="text-decoration: none; color: black;">Thương hiệu</a>
+            <!-- Right Side: Search & User -->
+            <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                <!-- Search Form -->
+                <form action="{{ route('shop.index') }}" method="GET" class="d-flex">
+                    <div class="input-group">
+                        <input class="form-control search-input" 
+                               type="search" 
+                               name="search" 
+                               placeholder="Tìm kiếm sản phẩm..."
+                               value="{{ request('search') }}">
+                        <button class="btn search-btn" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
                 
-                <!-- User Info -->
+                <!-- User Dropdown -->
                 @guest
-                    <a href="{{ route('login') }}" style="text-decoration: none; color: blue;">Đăng nhập</a>
+                    <a href="{{ route('login') }}" class="btn btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-person"></i> Đăng nhập
+                    </a>
                 @else
-                    <span>{{ Auth::user()->name }}</span>
-                    <a href="{{ route('user.profile') }}" style="text-decoration: none; color: blue;">Profile</a>
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" 
+                           data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle fs-4 me-2"></i>
+                            <span class="d-none d-lg-inline">{{ Str::limit(Auth::user()->name, 15) }}</span>
+                        </a>
+                        
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            @if(Auth::user()->role == 1)
+                                <li>
+                                    <a class="dropdown-item text-danger fw-bold" href="{{ route('admin.dashboard') }}">
+                                        <i class="bi bi-speedometer2 me-2"></i>Trang Admin
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                            @endif
+                            
+                            <li>
+                                <a class="dropdown-item" href="{{ route('user.profile') }}">
+                                    <i class="bi bi-person me-2"></i>Tài khoản
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('user.orders') }}">
+                                    <i class="bi bi-bag me-2"></i>Đơn hàng
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="#" 
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
-                        <button type="submit" style="background: none; border: none; color: red; cursor: pointer;">Đăng xuất</button>
                     </form>
                 @endguest
-
+                
                 <!-- Cart -->
-                <a href="{{ route('cart.index') }}" style="text-decoration: none; color: black;">
-                    🛒 Giỏ hàng
+                <a href="{{ route('cart.index') }}" class="position-relative">
+                    <i class="bi bi-cart3 fs-4"></i>
+                    @php
+                        $cartCount = Auth::check() ? Auth::user()->cartItems->sum('quantity') : 0;
+                    @endphp
+                    @if($cartCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">
+                            {{ $cartCount }}
+                        </span>
+                    @endif
                 </a>
             </div>
         </div>
