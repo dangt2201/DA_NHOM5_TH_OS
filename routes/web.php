@@ -65,7 +65,7 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
 
 /*
 |--------------------------------------------------------------------------
-| EMAIL VERIFICATION
+| EMAIL VERIFICATION 
 |--------------------------------------------------------------------------
 */
 Route::get('/email/verify', function () {
@@ -220,3 +220,8 @@ Route::middleware(['auth', 'verified', CheckAdmin::class])
                 ->name('update_status');
         });
     });
+
+    /**
+     * lỗi đăng nhập phải xác thực email trước
+     * 
+     */
