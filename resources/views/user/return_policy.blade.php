@@ -19,7 +19,7 @@
                     </ul>
                     <div class="alert alert-info">
                         <i class="bi bi-telephone-fill me-2"></i> Hotline/Zalo hỗ trợ: <strong>0905 595 596</strong> <br>
-                        <i class="bi bi-envelope-fill me-2"></i> Email: <strong>trangiahuy@gmail.com</strong>
+                        <i class="bi bi-envelope-fill me-2"></i> Email: <strong>dangthanh@gmail.com</strong>
                     </div>
 
                     <h5 class="fw-bold mt-4">2. Điều kiện đổi hàng</h5>
