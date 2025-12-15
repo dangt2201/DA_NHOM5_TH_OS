@@ -1,81 +1,76 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Danh sách đơn hàng</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        .badge-success { color: green; font-weight: bold; }
-        .badge-pending { color: orange; font-weight: bold; }
-        .badge-cancelled { color: red; font-weight: bold; }
-        .btn-detail { text-decoration: none; background: #007bff; color: white; padding: 5px 10px; border-radius: 4px; }
-        .pagination { display: flex; list-style: none; gap: 10px; padding: 0; }
-        .pagination li a, .pagination li span { border: 1px solid #ddd; padding: 5px 10px; text-decoration: none; }
-    </style>
-</head>
-<body>
+@extends('admin.admin')
 
-    <a href="/admin/dashboard" style="text-decoration: none;">&larr; Quay lại Dashboard</a>
-    
-    <h2>DANH SÁCH ĐƠN HÀNG</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Mã ĐH</th>
-                <th>Khách hàng</th>
-                <th>Ngày đặt</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($orders as $order)
-            <tr>
-                <td>#{{ $order->id }}</td>
-                
-                <td>
-                    <b>{{ $order->user->name ?? 'Khách Ẩn Danh' }}</b><br>
-                    <small>{{ $order->user->email ?? '' }}</small>
-                </td>
-
-                <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
-
-                <td style="color: #d63031; font-weight: bold;">
-                    {{ number_format($order->total_price) }} đ
-                </td>
-
-                <td>
-                    @if($order->status_order == 'completed')
-                        <span class="badge-success">Hoàn thành</span>
-                    @elseif($order->status_order == 'pending')
-                        <span class="badge-pending">Chờ xử lý</span>
-                    @elseif($order->status_order == 'cancelled')
-                        <span class="badge-cancelled">Đã hủy</span>
-                    @else
-                        {{ $order->status_order }}
-                    @endif
-                </td>
-
-                <td>
-                    <a href="{{ route('orders.detail', $order->id) }}" class="btn-detail">Xem chi tiết</a>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6" style="text-align: center;">Chưa có đơn hàng nào!</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div style="margin-top: 20px;">
-        {{ $orders->links() }}
+@section('content')
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Quản lý Đơn hàng</h6>
     </div>
-
-</body>
-</html>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã ĐH</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái ĐH</th>
+                        <th>Thanh toán</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($orders as $order)
+                    <tr>
+                        <td><strong>#{{ $order->id }}</strong></td>
+                        <td>
+                            {{ $order->user_name }}
+                            <br>
+                            <small class="text-muted">{{ $order->user_phone }}</small>
+                        </td>
+                        <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
+                        <td><strong class="text-danger">{{ number_format($order->total_price) }}đ</strong></td>
+                        <td>
+                            @switch($order->status_order)
+                                @case('pending')
+                                    <span class="badge badge-warning">Chờ xử lý</span>
+                                    @break
+                                @case('completed')
+                                    <span class="badge badge-success">Hoàn thành</span>
+                                    @break
+                                @case('failed')
+                                    <span class="badge badge-danger">Thất bại</span>
+                                    @break
+                                @case('cancelled')
+                                    <span class="badge badge-secondary">Đã hủy</span>
+                                    @break
+                            @endswitch
+                        </td>
+                        <td>
+                            @if($order->status_payment == 'paid')
+                                <span class="badge badge-success">Đã thanh toán</span>
+                            @else
+                                <span class="badge badge-warning">Chưa thanh toán</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.orders.detail', $order->id) }}" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i> Xem
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-3">Chưa có đơn hàng nào</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            
+            <div class="mt-3">
+                {{ $orders->links() }}
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
