@@ -53,7 +53,7 @@
                 
                 <!-- User Dropdown -->
                 @guest
-                    {{-- <a href="{{ route('login') }}" class="btn btn-outline-dark rounded-pill px-3"> --}}
+                    <a href="{{ route('login') }}" class="btn btn-outline-dark rounded-pill px-3">
                         <i class="bi bi-person"></i> Đăng nhập
                     </a>
                 @else
