@@ -3,29 +3,29 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Models\Brand;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
-    /**
-     * Hiển thị trang chủ
-     */
     public function index()
     {
-        // Lấy sản phẩm có giá sale (hot sale)
+        // 1. Lấy tất cả danh mục đang active
+        // with('products'): Eager loading để lấy luôn 4 sản phẩm mới nhất của danh mục đó
+        $categories = Category::where('is_active', true)
+            ->with(['products' => function($query) {
+                $query->where('is_active', true)->latest()->take(4);
+            }])
+            ->get();
+
+        // 2. Lấy sản phẩm HOT SALE (có giá khuyến mãi)
         $hotProducts = Product::where('is_active', true)
-                              ->whereNotNull('price_sale')
-                              ->limit(8)
-                              ->get();
+            ->whereNotNull('price_sale')
+            ->latest()
+            ->take(8)
+            ->get();
 
-        // Lấy tất cả categories active
-        $categories = Category::where('is_active', true)->get();
-
-        // Lấy tất cả brands active
-        $brands = Brand::where('is_active', true)->get();
-
-        return view('user.home', compact('hotProducts', 'categories', 'brands'));
+        return view('user.home', compact('categories', 'hotProducts'));
     }
 }

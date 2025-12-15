@@ -38,7 +38,7 @@
         <div class="row g-4">
             @foreach($hotProducts->take(8) as $product)
                 <div class="col-6 col-md-4 col-lg-3">
-                    {{-- @include('partials.product_card', ['product' => $product]) --}}
+                    @include('user.partials.product_card', ['product' => $product])
                 </div>
             @endforeach
         </div>

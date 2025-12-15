@@ -18,24 +18,7 @@
     <div class="row g-4">
         @forelse($products as $product)
             <div class="col-6 col-md-4 col-lg-3">
-                {{-- @include('partials.product_card', ['product' => $product]) --}}
-                {{-- test --}}
-                 <tr>
-                    <td>{{ $product->id }}</td>
-                    <td>{{ $product->name }}</td>
-                    <td>{{ number_format($product->price) }}đ</td>
-                    <td><strong style="color: red;">{{ number_format($product->price_sale) }}đ</strong></td>
-                    <td>
-                        @php
-                            $percent = round((($product->price - $product->price_sale) / $product->price) * 100);
-                        @endphp
-                        -{{ $percent }}%
-                    </td>
-                    <td>
-                        <a href="{{ route('shop.detail', $product->slug) }}">Xem chi tiết</a>
-                    </td>
-                </tr>
-                {{-- test --}}
+                @include('user.partials.product_card', ['product' => $product])
             </div>
         @empty
             <div class="col-12 text-center text-muted py-5">

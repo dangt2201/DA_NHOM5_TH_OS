@@ -11,18 +11,12 @@ use Illuminate\Support\Facades\File;
 
 class BrandController extends Controller
 {
-    /**
-     * 1. Hiển thị danh sách tất cả brands
-     */
     public function index()
     {
         $brands = Brand::where('is_active', true)->get();
         return view('user.brands.index', compact('brands'));
     }
 
-    /**
-     * 2. Hiển thị sản phẩm theo brand
-     */
     public function show($slug)
     {
         $brand = Brand::where('slug', $slug)->firstOrFail();

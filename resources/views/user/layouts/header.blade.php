@@ -31,7 +31,7 @@
                     <a class="nav-link" href="{{ route('shop.category', 'phu-kien') }}">Phụ kiện</a>
                 </li>
                 <li class="nav-item">
-                    {{-- <a class="nav-link" href="{{ route('return.policy') }}">Chính sách</a> --}}
+                    <a class="nav-link" href="{{ route('return.policy') }}">Chính sách</a>
                 </li>
             </ul>
             
@@ -100,7 +100,7 @@
                 @endguest
                 
                 <!-- Cart -->
-                {{-- <a href="{{ route('cart.index') }}" class="position-relative">
+                <a href="{{ route('cart.index') }}" class="position-relative">
                     <i class="bi bi-cart3 fs-4"></i>
                     @php
                         $cartCount = Auth::check() ? Auth::user()->cartItems->sum('quantity') : 0;
@@ -110,57 +110,7 @@
                             {{ $cartCount }}
                         </span>
                     @endif
-                </a> --}}
-                <!--test hiển thị số lượng sản phẩm trong Giỏ hàng -->
-                <div style="position: relative;">
-                    <a href="{{ route('cart.index') }}" style="text-decoration: none; color: black; font-size: 20px;">
-                        🛒
-                        <span id="cart-count-badge" style="
-                            position: absolute;
-                            top: -8px;
-                            right: -10px;
-                            background: red;
-                            color: white;
-                            border-radius: 50%;
-                            width: 20px;
-                            height: 20px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 12px;
-                            font-weight: bold;
-                        ">0</span>
-                    </a>
-                </div>
-
-                <script>
-                // Hàm cập nhật số lượng giỏ hàng
-                function updateCartCount() {
-                    fetch('{{ route('cart.count') }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        const badge = document.getElementById('cart-count-badge');
-                        badge.textContent = data.count;
-                        
-                        // Ẩn badge nếu count = 0
-                        if (data.count === 0) {
-                            badge.style.display = 'none';
-                        } else {
-                            badge.style.display = 'flex';
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                }
-
-                // Cập nhật khi page load
-                document.addEventListener('DOMContentLoaded', updateCartCount);
-                </script>
+                </a>
             </div>
         </div>
     </div>

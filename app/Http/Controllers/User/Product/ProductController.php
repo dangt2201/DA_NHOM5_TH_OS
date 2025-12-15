@@ -14,7 +14,7 @@ class ProductController extends Controller
     /**
      * 1. Trang danh sách tất cả sản phẩm
      */
-      public function index()
+    public function index()
     {
         $products = Product::where('is_active', true)->paginate(9);
         $categoryName = "Tất cả sản phẩm";
@@ -40,7 +40,7 @@ class ProductController extends Controller
     /**
      * 3. CHI TIẾT SẢN PHẨM
      */
-     public function detail($slug)
+    public function detail($slug)
     {
         $product = Product::where('slug', $slug)
             ->where('is_active', true)
@@ -59,7 +59,7 @@ class ProductController extends Controller
     /**
      * 4. Trang Hot Sale
      */
-     public function hotSale()
+    public function hotSale()
     {
         $products = Product::where('is_active', true)
                            ->whereNotNull('price_sale')
@@ -76,5 +76,20 @@ class ProductController extends Controller
     /**
      * Helper: Lấy URL hình ảnh
      */
-   
+    private function getImageUrl($imagePath)
+    {
+        if (empty($imagePath)) {
+            return 'https://placehold.co/400x400/f8f9fa/999?text=No+Image';
+        }
+        
+        if (str_starts_with($imagePath, 'http')) {
+            return $imagePath;
+        }
+        
+        if (str_starts_with($imagePath, '/storage')) {
+            return asset($imagePath);
+        }
+        
+        return asset('storage/' . $imagePath);
+    }
 }

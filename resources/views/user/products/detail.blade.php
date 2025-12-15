@@ -1,36 +1,5 @@
 @extends('user.layouts.app')
-<script>
-document.getElementById('addToCartForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const size = document.querySelector('input[name="size"]:checked');
-    const color = document.querySelector('input[name="color"]:checked');
-    const quantity = document.querySelector('input[name="quantity"]');
-    
-    if (!size) {
-        alert('Vui lòng chọn size');
-        return;
-    }
-    if (!color) {
-        alert('Vui lòng chọn màu');
-        return;
-    }
-    
-    document.getElementById('size_input').value = size.value;
-    document.getElementById('color_input').value = color.value;
-    document.getElementById('quantity_input').value = quantity.value || 1;
-    
-    // Submit form rồi update cart count
-    this.submit();
-    
-    // Update badge sau 500ms (sau khi add xong)
-    setTimeout(() => {
-        if (typeof updateCartCount === 'function') {
-            updateCartCount();
-        }
-    }, 500);
-});
-</script>
+
 @section('body')
 <div class="container py-5">
 
@@ -53,7 +22,15 @@ document.getElementById('addToCartForm').addEventListener('submit', function(e) 
     <div class="row">
         <div class="col-md-6 mb-4">
             <div class="card border-0 shadow-sm">
-                <img src="{{ $product->img_thumbnail }}" class="card-img-top" alt="{{ $product->name }}">
+                <img src="{{ $product->image_url ?? asset('images/no-image.png') }}" 
+                    class="card-img-top" 
+                    alt="{{ $product->name }}"
+                    onerror="
+                        if (!this.dataset.failed) {
+                            this.dataset.failed = 'true';
+                            this.src = 'https://via.placeholder.com/600x600/f8f9fa/6c757d?text={{ urlencode($product->name) }}';
+                        }
+                    ">
             </div>
         </div>
 
@@ -115,7 +92,7 @@ document.getElementById('addToCartForm').addEventListener('submit', function(e) 
         <div class="row">
             @foreach($relatedProducts as $related)
                 <div class="col-6 col-md-3">
-                    {{-- @include('partials.product_card', ['product' => $related]) --}}
+                     @include('user.partials.product_card', ['product' => $related])
                 </div>
             @endforeach
         </div>
