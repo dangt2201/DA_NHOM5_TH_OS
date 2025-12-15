@@ -1,87 +1,25 @@
 @extends('user.layouts.app')
 
 @section('body')
-<div style="padding: 20px; text-align: center;">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h1 style="color: green; font-size: 36px;">✅ Đặt hàng thành công!</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <i class="bi bi-check-circle text-success" style="font-size: 80px;"></i>
+                    <h2 class="mt-3">Thanh toán thành công!</h2>
+                    <p class="text-muted">Đơn hàng của bạn đã được xác nhận</p>
+                    
+                    <div class="mt-4 text-start">
+                        <p><strong>Mã đơn hàng:</strong> {{ $order->order_id }}</p>
+                        <p><strong>Số tiền:</strong> {{ number_format($order->amount) }} VNĐ</p>
+                        <p><strong>Nội dung:</strong> {{ $order->order_info }}</p>
+                        <p><strong>Mã giao dịch:</strong> {{ $order->trans_id }}</p>
+                    </div>
 
-        <p style="font-size: 18px; margin: 20px 0; color: #666;">Cảm ơn bạn đã đặt hàng</p>
-
-        <!-- Order Info -->
-        <div style="background: #e8f5e9; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid green;">
-            <h3>Thông tin đơn hàng</h3>
-            <table style="width: 100%; margin: 10px 0;">
-                <tr>
-                    <td style="text-align: left;"><strong>Mã đơn hàng:</strong></td>
-                    <td style="text-align: right;">#{{ $order->id }}</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><strong>Tổng tiền:</strong></td>
-                    <td style="text-align: right; font-size: 18px; color: red; font-weight: bold;">{{ number_format($order->total_price) }}đ</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><strong>Trạng thái đơn:</strong></td>
-                    <td style="text-align: right;">
-                        <span style="background: orange; color: white; padding: 5px 15px; border-radius: 20px;">
-                            Chờ xử lý
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><strong>Ngày đặt:</strong></td>
-                    <td style="text-align: right;">{{ $order->created_at->format('d/m/Y H:i') }}</td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Delivery Info -->
-        <div style="background: #e3f2fd; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid #2196f3;">
-            <h3>Thông tin giao hàng</h3>
-            <p><strong>{{ $order->user_name }}</strong></p>
-            <p>📞 {{ $order->user_phone }}</p>
-            <p>📧 {{ $order->user_email }}</p>
-            <p>📍 {{ $order->user_address }}</p>
-            @if($order->user_note)
-                <p><strong>Ghi chú:</strong> {{ $order->user_note }}</p>
-            @endif
-        </div>
-
-        <!-- Order Items -->
-        <h3>Sản phẩm đã đặt</h3>
-        <table border="1" style="width: 100%; margin: 20px 0; font-size: 14px;">
-            <tr style="background: #f5f5f5;">
-                <th>Sản phẩm</th>
-                <th>Size</th>
-                <th>Màu</th>
-                <th>SL</th>
-                <th>Giá</th>
-                <th>Thành tiền</th>
-            </tr>
-            @foreach($order->orderItems as $item)
-                <tr>
-                    <td>{{ $item->product_name }}</td>
-                    <td>{{ $item->variant_size_name }}</td>
-                    <td>{{ $item->variant_color_name }}</td>
-                    <td>{{ $item->quantity }}</td>
-                    <td>{{ number_format($item->product_price) }}đ</td>
-                    <td style="font-weight: bold;">{{ number_format($item->item_total) }}đ</td>
-                </tr>
-            @endforeach
-        </table>
-
-        <!-- Message -->
-        <div style="background: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 5px; color: #856404;">
-            <strong>ℹ️ Lưu ý:</strong> Chúng tôi sẽ liên hệ với bạn để xác nhận đơn hàng trong vòng 24 giờ.
-        </div>
-
-        <!-- Buttons -->
-        <div style="margin: 30px 0; display: flex; gap: 10px; justify-content: center;">
-            <a href="{{ route('user.orders') }}" style="padding: 12px 20px; background: #2196f3; color: white; text-decoration: none; border-radius: 5px;">
-                📦 Xem đơn hàng của tôi
-            </a>
-            <a href="{{ route('shop.index') }}" style="padding: 12px 20px; background: #000; color: white; text-decoration: none; border-radius: 5px;">
-                ← Tiếp tục mua sắm
-            </a>
+                    <a href="{{ route('home') }}" class="btn btn-primary mt-4">Về trang chủ</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
