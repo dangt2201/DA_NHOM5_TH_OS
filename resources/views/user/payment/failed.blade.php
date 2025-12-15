@@ -1,101 +1,74 @@
 @extends('user.layouts.app')
 
 @section('body')
-<div style="padding: 20px; text-align: center;">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h1 style="color: red; font-size: 36px;">❌ Thanh toán thất bại</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm rounded-0 text-center">
+                <div class="card-body p-5">
+                    {{-- Icon thất bại --}}
+                    <div class="mb-4">
+                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="40" cy="40" r="38" stroke="#dc3545" stroke-width="4" fill="#f8d7da"/>
+                            <path d="M30 30L50 50M50 30L30 50" stroke="#dc3545" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </div>
 
-        <p style="font-size: 18px; margin: 20px 0; color: #666;">Rất tiếc, giao dịch của bạn không thành công</p>
+                    <h2 class="text-danger mb-3">Thanh toán thất bại!</h2>
+                    <p class="text-muted mb-4">
+                        {{ $message ?? 'Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại.' }}
+                    </p>
 
-        <!-- Order Info -->
-        <div style="background: #ffebee; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid red;">
-            <h3>Thông tin đơn hàng</h3>
-            <table style="width: 100%; margin: 10px 0;">
-                <tr>
-                    <td style="text-align: left;"><strong>Mã đơn hàng:</strong></td>
-                    <td style="text-align: right;">#{{ $order->id }}</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><strong>Tổng tiền:</strong></td>
-                    <td style="text-align: right; font-size: 18px; color: red; font-weight: bold;">{{ number_format($order->total_price) }}đ</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><strong>Trạng thái thanh toán:</strong></td>
-                    <td style="text-align: right;">
-                        <span style="background: red; color: white; padding: 5px 15px; border-radius: 20px;">
-                            Thất bại
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><strong>Thời gian:</strong></td>
-                    <td style="text-align: right;">{{ $order->created_at->format('d/m/Y H:i') }}</td>
-                </tr>
-            </table>
-        </div>
+                    {{-- Thông tin đơn hàng --}}
+                    <div class="bg-light p-4 rounded-0 mb-4">
+                        <div class="row text-start">
+                            <div class="col-6">
+                                <p class="mb-2"><strong>Mã đơn hàng:</strong></p>
+                                <p class="mb-2"><strong>Số tiền:</strong></p>
+                                <p class="mb-2"><strong>Trạng thái:</strong></p>
+                                <p class="mb-0"><strong>Thời gian:</strong></p>
+                            </div>
+                            <div class="col-6 text-end">
+                                <p class="mb-2"><code>{{ $order->order_id }}</code></p>
+                                <p class="mb-2 text-danger fw-bold">{{ number_format($order->amount, 0, ',', '.') }} VNĐ</p>
+                                <p class="mb-2">
+                                    <span class="badge bg-danger">Thất bại</span>
+                                </p>
+                                <p class="mb-0">{{ $order->created_at->format('d/m/Y H:i') }}</p>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Possible Reasons -->
-        <div style="background: #fff3cd; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid #ff9800;">
-            <h3 style="color: #ff6f00;">⚠️ Có thể do:</h3>
-            <ul style="text-align: left; display: inline-block;">
-                <li>Số dư tài khoản không đủ</li>
-                <li>Thông tin xác thực không chính xác</li>
-                <li>Bạn đã hủy giao dịch</li>
-                <li>Lỗi kết nối mạng</li>
-                <li>Thời gian hết hạn</li>
-            </ul>
-        </div>
+                    {{-- Lý do thất bại --}}
+                    <div class="alert alert-danger rounded-0 text-start">
+                        <strong><i class="bi bi-exclamation-triangle"></i> Có thể do:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Số dư tài khoản không đủ</li>
+                            <li>Thông tin xác thực không chính xác</li>
+                            <li>Hủy giao dịch</li>
+                            <li>Lỗi kết nối</li>
+                        </ul>
+                    </div>
 
-        <!-- Delivery Info -->
-        <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px;">
-            <h3>Thông tin giao hàng</h3>
-            <p><strong>{{ $order->user_name }}</strong></p>
-            <p>📞 {{ $order->user_phone }}</p>
-            <p>📧 {{ $order->user_email }}</p>
-            <p>📍 {{ $order->user_address }}</p>
-        </div>
+                    {{-- Buttons --}}
+                    <div class="d-grid gap-2">
+                        <a href="{{ route('payment.checkout') }}" class="btn btn-danger rounded-0 py-2">
+                            <i class="bi bi-arrow-clockwise"></i> Thử lại thanh toán
+                        </a>
+                        <a href="{{ route('home') }}" class="btn btn-outline-secondary rounded-0 py-2">
+                            <i class="bi bi-house-door"></i> Về trang chủ
+                        </a>
+                    </div>
 
-        <!-- Order Items -->
-        <h3>Sản phẩm đã đặt</h3>
-        <table border="1" style="width: 100%; margin: 20px 0; font-size: 14px;">
-            <tr style="background: #f5f5f5;">
-                <th>Sản phẩm</th>
-                <th>Size</th>
-                <th>Màu</th>
-                <th>SL</th>
-                <th>Giá</th>
-                <th>Thành tiền</th>
-            </tr>
-            @foreach($order->orderItems as $item)
-                <tr>
-                    <td>{{ $item->product_name }}</td>
-                    <td>{{ $item->variant_size_name }}</td>
-                    <td>{{ $item->variant_color_name }}</td>
-                    <td>{{ $item->quantity }}</td>
-                    <td>{{ number_format($item->product_price) }}đ</td>
-                    <td style="font-weight: bold;">{{ number_format($item->item_total) }}đ</td>
-                </tr>
-            @endforeach
-        </table>
-
-        <!-- Support -->
-        <div style="background: #e3f2fd; padding: 20px; margin: 20px 0; border-radius: 8px;">
-            <h3>Cần hỗ trợ?</h3>
-            <p>📞 Hotline: <strong>1900.633.349</strong></p>
-            <p>💬 Chat với chúng tôi để được hỗ trợ</p>
-        </div>
-
-        <!-- Buttons -->
-        <div style="margin: 30px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-            <a href="{{ route('payment.checkout') }}" style="padding: 12px 20px; background: #f44336; color: white; text-decoration: none; border-radius: 5px;">
-                🔄 Thử lại thanh toán
-            </a>
-            <a href="{{ route('user.orders') }}" style="padding: 12px 20px; background: #2196f3; color: white; text-decoration: none; border-radius: 5px;">
-                📦 Xem đơn hàng
-            </a>
-            <a href="{{ route('shop.index') }}" style="padding: 12px 20px; background: #000; color: white; text-decoration: none; border-radius: 5px;">
-                ← Trang chủ
-            </a>
+                    {{-- Support --}}
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            <i class="bi bi-telephone"></i>
+                            Cần hỗ trợ? Liên hệ: <strong>1900.633.349</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
