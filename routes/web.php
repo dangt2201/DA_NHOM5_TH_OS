@@ -222,6 +222,5 @@ Route::middleware(['auth', 'verified', CheckAdmin::class])
     });
 
     /**
-     * lỗi đăng nhập phải xác thực email trước
-     * 
+     * lỗi chưa hiển thị ảnh prduct
      */
