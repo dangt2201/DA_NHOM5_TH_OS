@@ -222,5 +222,5 @@ Route::middleware(['auth', 'verified', CheckAdmin::class])
     });
 
     /**
-     * lỗi chưa hiển thị ảnh prduct
+     * lỗi chưa hiện hết danh mục sản phẩm ở trang chủ
      */
