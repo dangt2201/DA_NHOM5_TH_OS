@@ -132,23 +132,18 @@ class LoginController extends Controller
                 'email' => $user->email,
             ]);
 
-            $requireVerification = env('VERIFY_EMAIL_REQUIRED', true);
+            // $requireVerification = env('VERIFY_EMAIL_REQUIRED', true);
             
-            if ($requireVerification) {
-                event(new Registered($user));
-
-                return redirect()->route('login')
-                    ->with('success', "Đăng ký thành công! 📧 Vui lòng kiểm tra email <strong>{$user->email}</strong> để xác thực tài khoản.")
-                    ->with('email_registered', $user->email);
-            } else {
+           // Tự động verify email
                 $user->email_verified_at = now();
                 $user->save();
-                
+
+                // Auto login
                 Auth::login($user);
-                
+
+                // Redirect home
                 return redirect('/')
                     ->with('success', "Đăng ký thành công! Chào mừng {$user->name} đến với SOLID TECH!");
-            }
 
         } catch (\Exception $e) {
             Log::error('Registration failed', [

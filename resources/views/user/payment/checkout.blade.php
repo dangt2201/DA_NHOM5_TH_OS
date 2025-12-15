@@ -81,7 +81,7 @@
                             </label>
                         </div>
                         
-                        <!-- MoMo Payment -->
+                        {{-- <!-- MoMo Payment -->
                         <div class="form-check p-3 border rounded payment-option">
                             <input class="form-check-input" type="radio" name="payment_method" 
                                    id="momo" value="momo">
@@ -107,7 +107,7 @@
                                     </div>
                                 </div>
                             </label>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

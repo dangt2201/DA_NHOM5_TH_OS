@@ -39,7 +39,7 @@
                                 <i class="bi bi-box-arrow-in-right me-2"></i>
                                 Đăng nhập
                             </button>
-                            <a href="{{ route('password.request') }}" class="ms-auto text-decoration-none text-muted small">Quên mật khẩu?</a>
+                            <a href="{{-- route('password.request') --}}" class="ms-auto text-decoration-none text-muted small">Quên mật khẩu?</a>
                         </div>
                     </form>
 

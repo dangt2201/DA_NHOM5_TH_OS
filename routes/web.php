@@ -42,77 +42,12 @@ Route::post('/register', [LoginController::class, 'register'])->name('register')
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Google OAuth
-Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])
+    ->middleware('guest')
+    ->name('google.login');
+
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])
     ->middleware('throttle:10,1');
-
-/*
-|--------------------------------------------------------------------------
-| FORGOT PASSWORD
-|--------------------------------------------------------------------------
-*/
-Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm']) 
-    ->middleware('guest')->name('password.request');
-
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
-    ->middleware('guest')->name('password.email');
-
-Route::get('/password/reset/{token}', [ForgotPasswordController::class, 'showResetForm']) 
-    ->middleware('guest')->name('password.reset');
-
-Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
-    ->middleware('guest')->name('password.update');
-
-/*
-|--------------------------------------------------------------------------
-| EMAIL VERIFICATION 
-|--------------------------------------------------------------------------
-*/
-Route::get('/email/verify', function () {
-    if (Auth::check() && Auth::user()->hasVerifiedEmail()) {
-        return redirect('/')->with('info', 'Email của bạn đã được xác thực.');
-    }
-    return view('user.auth.verify-email');
-})->middleware('auth')->name('verification.notice');
-
-Route::get('/email/verify/{id}/{hash}', function (Request $request) {
-    $user = \App\Models\User::findOrFail($request->route('id'));
-
-    if (!hash_equals(sha1($user->getEmailForVerification()), (string) $request->route('hash'))) {
-        abort(403, 'Link xác thực không hợp lệ.');
-    }
-
-    if (!$request->hasValidSignature()) {
-        return redirect()->route('login')
-            ->with('error', 'Link xác thực đã hết hạn. Vui lòng đăng nhập và gửi lại email xác thực.');
-    }
-
-    if ($user->hasVerifiedEmail()) {
-        return redirect()->route('login')
-            ->with('info', 'Email này đã được xác thực. Bạn có thể đăng nhập.');
-    }
-
-    $user->markEmailAsVerified();
-    Auth::login($user);
-
-    return redirect('/')
-        ->with('success', '🎉 Email đã được xác thực thành công! Chào mừng ' . $user->name . ' đến với SOLID TECH!');
-        
-})->middleware(['signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification', function (Request $request) {
-    if ($request->user()->hasVerifiedEmail()) {
-        return back()->with('info', 'Email của bạn đã được xác thực rồi.');
-    }
-
-    $request->user()->sendEmailVerificationNotification();
-
-    return back()->with('success', 'Email xác thực đã được gửi lại! Vui lòng kiểm tra hộp thư.');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-Route::post('/email/resend', [LoginController::class, 'resendVerificationEmail'])
-    ->middleware('throttle:6,1')
-    ->name('verification.resend');
 
 /*
 |--------------------------------------------------------------------------
@@ -160,20 +95,14 @@ Route::get('/thuong-hieu/{slug}', [UserBrandController::class, 'show'])->name('b
 
 /*
 |--------------------------------------------------------------------------
-| PAYMENT (Cần verify email)
+| PAYMENT - COD ONLY
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'verified'])->prefix('payment')->name('payment.')->group(function () {
+Route::middleware(['auth'])->prefix('payment')->name('payment.')->group(function () {
     Route::get('/checkout', [MoMoController::class, 'showCheckout'])->name('checkout');
     Route::post('/process', [MoMoController::class, 'processPayment'])->name('process');
     Route::get('/success/{orderId}', [MoMoController::class, 'success'])->name('success');
-    Route::get('/failed/{orderId}', [MoMoController::class, 'failed'])->name('failed');
 });
-
-// MoMo Callbacks (Public)
-Route::get('/payment/momo/callback', [MoMoController::class, 'callback'])->name('momo.callback');
-Route::post('/payment/momo/ipn', [MoMoController::class, 'ipn'])->name('momo.ipn');
-
 /*
 |--------------------------------------------------------------------------
 | OTHER PAGES
