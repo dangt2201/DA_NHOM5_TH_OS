@@ -12,7 +12,7 @@ use App\Http\Controllers\User\Payment\MoMoController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\User\Login\LoginController;
-
+use App\Http\Controllers\User\Login\RegisterController;
 
 
 /*
@@ -25,6 +25,8 @@ Route::prefix('auth')->name('auth.')->controller(LoginController::class)->group(
     Route::middleware('guest')->group(function () {
         Route::get('/login', 'showLoginForm')->name('login');
         Route::post('/login', 'login')->name('login.post');
+        Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+        Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
     });
 
     // Auth only
@@ -37,6 +39,9 @@ Route::prefix('auth')->name('auth.')->controller(LoginController::class)->group(
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register')->middleware('guest');
+Route::post('/register', [RegisterController::class, 'register'])->middleware('guest');
+
 // ============= HOME PAGE =============
 Route::get('/', [HomeController::class, 'index'])->name('home');
 /*
