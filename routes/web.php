@@ -9,7 +9,34 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController as AdminBrandController;
 use App\Http\Controllers\User\Payment\MoMoController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\User\Login\LoginController;
 
+
+
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::prefix('auth')->name('auth.')->controller(LoginController::class)->group(function () {
+    // Guest only
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', 'showLoginForm')->name('login');
+        Route::post('/login', 'login')->name('login.post');
+    });
+
+    // Auth only
+    Route::middleware('auth')->group(function () {
+        Route::post('/logout', 'logout')->name('logout');
+    });
+});
+
+// Alias routes for convenience
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 // ============= HOME PAGE =============
 Route::get('/', [HomeController::class, 'index'])->name('home');
 /*
@@ -34,10 +61,10 @@ Route::get('/danh-muc/{slug}', [UserProductController::class, 'getByCategory'])-
 Route::get('/hot-sale', [UserProductController::class, 'hotSale'])->name('shop.hotSale');
 /*
 |--------------------------------------------------------------------------
-| CART (chưa xác thực người dùng)
+| CART (đã thêm middleware để test)
 |--------------------------------------------------------------------------
 */
-Route::prefix('cart')->name('cart.')->group(function () {
+Route::prefix('cart')->name('cart.')->middleware('auth')->controller(CartController::class)->group(function () {
    Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/add', [CartController::class, 'add'])->name('add');
     Route::post('/update/{id}', [CartController::class, 'update'])->name('update');
@@ -47,10 +74,10 @@ Route::prefix('cart')->name('cart.')->group(function () {
 });
 /*
 |--------------------------------------------------------------------------
-| PAYMENT (Tạm thời bỏ middleware để test)
+| PAYMENT (đã thêm middleware để test)
 |--------------------------------------------------------------------------
 */
-Route::prefix('payment')->name('payment.')->group(function () {
+Route::prefix('payment')->name('payment.')->middleware('auth')->controller(MoMoController::class)->group(function () {
     Route::get('/checkout', [MoMoController::class, 'showCheckout'])->name('checkout');
     Route::post('/process', [MoMoController::class, 'processPayment'])->name('process');
     Route::get('/success/{orderId}', [MoMoController::class, 'success'])->name('success');
