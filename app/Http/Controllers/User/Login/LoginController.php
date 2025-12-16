@@ -73,10 +73,10 @@ class LoginController extends Controller
                 'role' => $user->role,
             ]);
 
-            if ($user->role == 1) {
-                return redirect('admin/dashboard')
-                    ->with('success', "Chào mừng quản trị viên {$user->name}!");
-            }
+            // if ($user->role == 1) {
+            //     return redirect('admin/dashboard')
+            //         ->with('success', "Chào mừng quản trị viên {$user->name}!");
+            // }
 
             return redirect('/')
                 ->with('success', "Đăng nhập thành công! Chào {$user->name}");

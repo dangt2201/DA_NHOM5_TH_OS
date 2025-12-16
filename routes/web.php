@@ -98,7 +98,7 @@ Route::get('/thuong-hieu/{slug}', [UserBrandController::class, 'show'])->name('b
 | PAYMENT - COD ONLY
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->prefix('payment')->name('payment.')->group(function () {
+Route::prefix('payment')->name('payment.')->group(function () {
     Route::get('/checkout', [MoMoController::class, 'showCheckout'])->name('checkout');
     Route::post('/process', [MoMoController::class, 'processPayment'])->name('process');
     Route::get('/success/{orderId}', [MoMoController::class, 'success'])->name('success');
@@ -112,44 +112,3 @@ Route::view('/return-policy', 'user.return_policy')->name('return.policy');
 Route::view('/about', 'user.about')->name('about');
 Route::view('/contact', 'user.contact')->name('contact');
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'verified', CheckAdmin::class])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-        
-        // ========== DASHBOARD ==========
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        
-        // ========== PRODUCTS ==========
-        Route::resource('products', AdminProductController::class);
-        
-        // ========== CATEGORIES ==========
-        Route::resource('categories', CategoryController::class);
-        
-        // ========== BRANDS ==========
-        Route::resource('brands', AdminBrandController::class);
-        
-        // ========== PRODUCT VARIANTS ==========
-        Route::post('products/{product}/variants', [ProductVariantController::class, 'store'])
-            ->name('product_variants.store');
-        
-        Route::delete('variants/{variant}', [ProductVariantController::class, 'destroy'])
-            ->name('product_variants.destroy');
-        
-        // ========== ORDERS ==========
-        Route::prefix('orders')->name('orders.')->group(function () {
-            Route::get('/', [DashboardController::class, 'orders'])->name('index');
-            Route::get('/{orderId}', [DashboardController::class, 'orderDetail'])->name('detail');
-            Route::post('/{orderId}/update-status', [DashboardController::class, 'updateOrderStatus'])
-                ->name('update_status');
-        });
-    });
-
-    /**
-     * lỗi chưa hiện hết danh mục sản phẩm ở header
-     */
