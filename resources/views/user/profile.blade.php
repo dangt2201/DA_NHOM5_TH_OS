@@ -91,11 +91,12 @@
                     <div class="text-start">
                         <p class="mb-2">
                             <strong>Vai trò:</strong> 
-                            @if($user->role == 1)
+                             <span class="badge bg-primary">Khách hàng</span>
+                            {{-- @if($user->role == 1)
                                 <span class="badge bg-danger">Quản trị viên</span>
                             @else
                                 <span class="badge bg-primary">Khách hàng</span>
-                            @endif
+                            @endif --}}
                         </p>
                         <p class="mb-2">
                             <strong>Tham gia:</strong> {{ $user->created_at->format('d/m/Y') }}
