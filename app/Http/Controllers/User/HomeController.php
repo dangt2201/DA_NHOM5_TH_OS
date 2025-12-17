@@ -17,6 +17,7 @@ class HomeController extends Controller
             ->with(['products' => function($query) {
                 $query->where('is_active', true)->latest()->take(4);
             }])
+            ->latest()
             ->get();
 
         // 2. Lấy sản phẩm HOT SALE (có giá khuyến mãi)
