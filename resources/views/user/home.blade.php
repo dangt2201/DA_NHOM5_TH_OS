@@ -30,7 +30,7 @@
 <section class="featured-products py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold text-uppercase mb-2">Sản phẩm nổi bật</h2>
+            <h2 class="fw-bold text-uppercase mb-2">Sản phẩm nổi bật LUU NHAT KHANH</h2>
             <div class="bg-danger mx-auto" style="width: 80px; height: 4px;"></div>
             <p class="text-muted mt-3">Những đôi giày được yêu thích nhất</p>
         </div>
