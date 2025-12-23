@@ -21,6 +21,7 @@
             <a href="{{ route('shop.index') }}" 
                class="btn btn-white btn-lg px-5 animate__animated animate__fadeInUp animate__delay-1s">
                 Khám phá ngay
+                DANG THANH  
             </a>
         </div>
     </div>
